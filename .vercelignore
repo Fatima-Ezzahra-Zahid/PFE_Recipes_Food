@@ -1,6 +1,0 @@
-.git
-.venv
-*.pyc
-__pycache__/
-tests/
-docs/
