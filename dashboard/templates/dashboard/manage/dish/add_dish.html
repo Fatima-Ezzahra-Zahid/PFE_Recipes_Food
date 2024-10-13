@@ -1,0 +1,190 @@
+{% extends 'dashboard/includes/base.html' %}
+{% load static %}
+
+{% block style %}
+    <!-- Select2 CSS -->
+    <link rel="stylesheet" href="{% static 'dashboard/plugins/select2/css/select2.min.css' %}">
+{% endblock %}
+
+{% block content %}
+
+    <div class="card">
+        <div class="card-body">
+            <div class="page-header">
+                <div class="content-invoice-header">
+                    <h5>Add Dish</h5>
+                </div>
+            </div>
+            <!-- /Page Header -->
+            <div class="row justify-content-center">
+                <div class="cards">
+                    <div class="card-bod">
+                        <div class="card-table">
+                            <div class="card-bod">
+                                <div class="row mt-3">
+                                    <form action="" method="POST"
+                                          enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                        <div class="input-block mb-3 row">
+                                            <label class="col-form-label col-lg-2">Name</label>
+                                            <div class="col-lg-10">
+                                                <div class="input-group">
+                                                    <input type="text" name="name"
+                                                           class="form-control" placeholder="Name"
+                                                           aria-label="Name" aria-describedby="basic-addon1" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="input-block mb-3 row">
+                                            <label class="col-form-label col-lg-2">Description</label>
+                                            <div class="col-lg-10">
+                                                <div class="col-md-12">
+                                                <textarea name="description" rows="5" cols="5" class="form-control"
+                                                          placeholder="Enter text here" required></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="input-block mb-3 row">
+                                            <label class="col-form-label col-lg-2">Cuisine Type</label>
+                                            <div class="col-lg-10">
+                                                <div class="input-group">
+                                                    <input type="text" name="cuisine_type"
+                                                           class="form-control"
+                                                           id="basic-url"
+                                                           aria-describedby="basic-addon3" required>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="input-block mb-3 row">
+                                            <label class="col-form-label col-lg-2">Cooking Time</label>
+                                            <div class="col-lg-10">
+                                                <div class="input-group">
+                                                    <input type="number" name="cooking_time"
+                                                           class="form-control"
+                                                           aria-label="Amount (to the nearest dollar)" required>
+                                                    <span class="input-group-text">min</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="input-block mb-3 row mb-0">
+                                            <label class="col-form-label col-lg-2">Image</label>
+                                            <div class="col-lg-10">
+                                                <div class="input-group">
+                                                    <input type="file" name="image" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="input-block mb-3 row">
+                                            <label class="col-form-label col-lg-2">Ingredient</label>
+                                            <div class="col-lg-10">
+                                                <select class="form-control tagging" name="ingredients"
+                                                        multiple="multiple">
+                                                    {% for ingredient in ingredients %}
+                                                        <option>{{ ingredient.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+
+                                        </div>
+                                        <div class="input-block mb-3 row">
+                                            <label class="col-form-label col-lg-2">Categories</label>
+                                            <div class="col-lg-10">
+                                                <select class="form-control tagging" name="categories"
+                                                        multiple="multiple">
+                                                    {% for category in categories %}
+                                                        <option value="{{ category.name }}">{{ category.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+
+                                        </div>
+                                        <!-- Existing HTML code above remains the same -->
+
+                                        <div class="input-block mb-3 row">
+                                            <label class="col-form-label col-lg-2">Steps</label>
+                                            <div id="new-steps"></div>
+                                            <div>
+                                                <button type="button" class="btn btn-secondary mt-2" id="add-step">Add
+                                                    Step
+                                                </button>
+                                            </div>
+                                        </div>
+
+
+                                        <!-- Existing HTML code below remains the same -->
+
+                                        <hr>
+                                        <button type="submit" class="btn btn-primary mt-2">Add Dish</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block script %}
+    <!-- Select 2 -->
+    <script src="{% static 'dashboard/plugins/select2/js/select2.min.js' %}"></script>
+    <script>
+        // Initialize Select2 on elements with the class `tagging`
+        $(document).ready(function () {
+            $('.tagging').select2({
+                tags: true,
+                placeholder: "Select or type ingredients", // Placeholder
+                allowClear: true
+            });
+        });
+    </script>
+    <script>
+        let stepCounter = 0;  // Start from zero, since we are adding new steps
+
+        // Function to add a new step
+        document.getElementById('add-step').addEventListener('click', function () {
+            stepCounter++;  // Increment step counter
+
+            const newStepDiv = document.createElement('div');
+            newStepDiv.className = 'input-block mb-3 row step';
+            newStepDiv.id = 'new-step-' + stepCounter;
+
+            newStepDiv.innerHTML = `
+        <label class="col-form-label col-lg-2">Step ${stepCounter}</label>
+        <div class="col-lg-10">
+            <textarea name="new_step_instruction_${stepCounter}" rows="3" class="form-control" required></textarea>
+            <button type="button" class="btn btn-danger mt-2 remove-step" onclick="removeStep('new-step-${stepCounter}')">Remove</button>
+        </div>
+    `;
+
+            // Append the new step to the 'new-steps' div
+            document.getElementById('new-steps').appendChild(newStepDiv);
+        });
+
+        // Function to remove a step and renumber the remaining steps
+        function removeStep(stepId) {
+            const stepDiv = document.getElementById(stepId);
+            if (stepDiv) {
+                stepDiv.remove();  // Remove the step from the DOM
+            }
+            // After removing, renumber all the steps
+            renumberSteps();
+        }
+
+        // Function to renumber steps dynamically
+        function renumberSteps() {
+            let stepBlocks = document.querySelectorAll('.step');
+            stepBlocks.forEach((stepBlock, index) => {
+                // Renumber step labels
+                const label = stepBlock.querySelector('label');
+                label.textContent = `Step ${index + 1}`;  // Set the step number starting from 1
+            });
+        }
+
+    </script>
+{% endblock %}

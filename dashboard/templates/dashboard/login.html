@@ -1,0 +1,70 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-layout="vertical" data-topbar="light" data-sidebar="light" data-sidebar-size="lg"
+      data-sidebar-image="none">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Title -->
+    <title>Kanakku - Bootstrap Admin HTML Template</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="{% static 'dashboard/img/con.png' %}">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'dashboard/css/bootstrap.min.css' %}">
+
+    <!-- Font family -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
+          rel="stylesheet">
+
+    <!-- Fontawesome CSS -->
+    <link rel="stylesheet" href="{% static 'dashboard/plugins/fontawesome/css/fontawesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'dashboard/plugins/fontawesome/css/all.min.css' %}">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="{% static 'dashboard/css/style.css' %}">
+
+    <!-- Layout Js -->
+    <script src="{% static 'dashboard/js/layout.js' %}"></script>
+</head>
+<body>
+<div class="main-wrapper login-body">
+    <div class="login-wrapper">
+        <div class="container">
+
+            <div class="loginbox">
+                <div class="login-right">
+                    <div class="login-right-wrap">
+                        <h1>Login</h1>
+                        <p class="account-subtitle">Access to our dashboard</p>
+
+                        {% include 'cooking/includes/messages.html' %}  <!-- Include your messages here -->
+                        <form action="{% url 'do_login' %}" method="POST">
+                            {% csrf_token %}
+                            <div class="input-block mb-3">
+                                <label class="form-control-label">Email Address</label>
+                                <div class="sec-2">
+                                    <ion-icon name="mail-outline"></ion-icon>
+                                    <input type="email" name="email" class="form-control" placeholder="Username@gmail.com" required/>
+                                </div>
+                            </div>
+                            <div class="input-block mb-3">
+                                <label class="form-control-label">Password</label>
+                                <div class="pass-group">
+                                    <input type="password" name="password" class="form-control pass-input" placeholder="············" required>
+                                </div>
+                            </div>
+                            <button class="btn btn-lg btn-primary w-100" type="submit">Login</button>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

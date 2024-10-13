@@ -1,0 +1,120 @@
+{% load static %}
+<div class="sidemenu-wrapper sidemenu-info ">
+    <div class="sidemenu-content">
+        <button class="closeButton sideMenuCls"><i class="far fa-times"></i></button>
+        <div class="widget  ">
+            <div class="th-widget-about">
+                <div class="about-logo">
+                    <a href="{% url 'home' %}"><img src="{% static 'img/logo.png' %}" alt="Recipes"></a>
+                </div>
+                <p class="about-text">We provide delicious seasonal recipes, from hearty winter comfort foods to fresh
+                    spring dishes. Enjoy flavorful meals all year round!</p>
+                <div class="th-social">
+                    <a href="https://www.facebook.com/"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.twitter.com/"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.linkedin.com/"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="https://www.whatsapp.com/"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="widget  ">
+            <h3 class="widget_title">Get In Touch</h3>
+            <div class="th-widget-contact">
+                <div class="info-box">
+                    <h4 class="box-title">Email address</h4>
+                    <div class="box-content">
+                        <div class="box-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <p class="box-text"><a href="mailto:info@restar.com">info@recipes.com</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="popup-search-box d-none d-lg-block">
+    <button class="searchClose"><i class="fal fa-times"></i></button>
+    <form action="#">
+        <input type="text" placeholder="What are you looking for?">
+        <button type="submit"><i class="fal fa-search"></i></button>
+    </form>
+</div>
+<!--==============================
+	Header Area
+==============================-->
+<!--============================== Mobile Menu ============================== -->
+
+<div class="th-menu-wrapper">
+    <div class="th-menu-area text-center">
+        <button class="th-menu-toggle"><i class="fal fa-times"></i></button>
+        <div class="mobile-logo">
+            <a href="{% url 'home' %}"><img src="{% static 'img/logo.png' %}" alt="Recipes"></a>
+        </div>
+        <div class="th-mobile-menu">
+            <ul>
+                <li>
+                    <a href="{% url 'home' %}">Home</a>
+                </li>
+                <li>
+                    <a href="{% url 'recipes' %}">Recipes</a>
+                </li>
+                <li>
+                    <a {% if '/suggestion/' in request.path %}class="active-menu"{% endif %}
+                       href="{% url 'suggestion' %}">Suggestions</a>
+                </li>
+                <li>
+                    <a href="{% url 'contact' %}">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<header class="th-header header-layout3 ">
+    <div class="sticky-wrapper">
+        <!-- Main Menu Area -->
+        <div class="menu-area">
+            <div class="w-100">
+                <div class="row align-items-center justify-content-between">
+                    <div class="col-auto">
+                        <div class="header-logo">
+                            <a href="{% url 'home' %}"><img src="{% static 'img/logo-white.png' %}"
+                                                            alt="Recipes"></a>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <nav class="main-menu d-none d-lg-inline-block">
+                            <ul>
+                                <li>
+                                    <a {% if  request.path == '/' %}class="active-menu"{% endif %}
+                                       href="{% url 'home' %}">Home</a>
+                                </li>
+                                <li>
+                                    <a {% if '/recipes/' in request.path %}class="active-menu"{% endif %}
+                                       href="{% url 'recipes' %}">Recipes</a>
+                                </li>
+                                <li>
+                                    <a {% if '/suggestion/' in request.path %}class="active-menu"{% endif %}
+                                       href="{% url 'suggestion' %}">Suggestions</a>
+                                </li>
+                                <li>
+                                    <a {% if  request.path == '/contact/' %}class="active-menu"{% endif %}
+                                       href="{% url 'contact' %}">Contact</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <div class="col-auto">
+                        <div class="header-button">
+                            <button type="button" class="square-btn sideMenuInfo">
+                                <i class="fal fa-bars"></i>
+                            </button>
+                            <button type="button" class="th-menu-toggle d-block d-lg-none"><i class="far fa-bars"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>

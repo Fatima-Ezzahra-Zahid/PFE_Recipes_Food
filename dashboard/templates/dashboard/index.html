@@ -1,0 +1,187 @@
+{% extends 'dashboard/includes/base.html' %}
+{% load static %}
+{% block content %}
+
+    <div class="row">
+        <!-- Total Dishes -->
+        <div class="col-xl-3 col-sm-6 col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="dash-widget-header mb-0">
+                    <span class="dash-widget-icon bg-4">
+                        <i class="far fa-star"></i>
+                    </span>
+                        <div class="dash-count">
+                            <div class="dash-title">Total ingredients</div>
+                            <div class="dash-counts">
+                                <p>{{ total_ingredients }}</p> <!-- Display the name of the top-rated dish here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Users -->
+        <div class="col-xl-3 col-sm-6 col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="dash-widget-header mb-0">
+                    <span class="dash-widget-icon bg-1">
+                        <i class="fas fa-utensils"></i>
+                    </span>
+                        <div class="dash-count">
+                            <div class="dash-title">Total Dishes</div>
+                            <div class="dash-counts">
+                                <p>{{ total_dishes }}</p> <!-- Display total dishes here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Ingredients -->
+        <div class="col-xl-3 col-sm-6 col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="dash-widget-header mb-0">
+                    <span class="dash-widget-icon bg-2">
+                        <i class="fas fa-users"></i>
+                    </span>
+                        <div class="dash-count">
+                            <div class="dash-title">Total Users</div>
+                            <div class="dash-counts">
+                                <p>{{ total_users }}</p> <!-- Display total users here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Dishes (added within the last week) -->
+        <div class="col-xl-3 col-sm-6 col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="dash-widget-header mb-0">
+                    <span class="dash-widget-icon bg-4">
+                        <i class="fas fa-clock"></i>
+                    </span>
+                        <div class="dash-count">
+                            <div class="dash-title">Recent Dishes</div>
+                            <div class="dash-counts">
+                                <p>{{ recent_dishes }}</p> <!-- Display recent dishes added in the last week -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 col-sm-6">
+            <div class="card mb-0">
+                <div class="card-header">
+                    <div class="row align-center">
+                        <div class="col">
+                            <h5 class="card-title">Recent Dishes</h5>
+                        </div>
+                        <div class="col-auto">
+                            <a href="{% url 'dishes' %}" class="btn-right btn btn-sm btn-outline-primary">
+                                View All
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+
+                        <table class="table table-stripped table-hover">
+                            <thead class="thead-light">
+                            <tr>
+                                <th>Name</th>
+                                <th>Cuisine Type</th>
+                                <th>Cooking Time</th>
+                                <th>Created At</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for dish in last_dishes %}
+                                <tr>
+                                    <td>
+                                        <h2 class="table-avatar">
+                                            <a href="">
+                                                {% if dish.image %}
+                                                    <img class="avatar avatar-sm me-2 avatar-img rounded-circle"
+                                                         src="{{ dish.image.url }}"
+                                                         alt="User Image">
+                                                {% else %}
+                                                    <img class="avatar avatar-sm me-2 avatar-img rounded-circle"
+                                                         src="{% static 'dashboard/img/profiles/avatar-04.jpg' %}"
+                                                         alt="User Image">
+                                                {% endif %}
+                                                {{ dish.name }}</a>
+                                        </h2>
+                                    </td>
+                                    <td>{{ dish.cuisine_type }}</td>
+                                    <td>{{ dish.cooking_time }}</td>
+                                    <td><span class="badge bg-success-light">{{ dish.created_at|date:'Y-m-d' }}</span>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-sm-6">
+            <div class="card mb-0">
+                <div class="card-header">
+                    <div class="row align-center">
+                        <div class="col">
+                            <h5 class="card-title">Recent Users</h5>
+                        </div>
+                        <div class="col-auto">
+                            <a href="{% url 'users' %}" class="btn-right btn btn-sm btn-outline-primary">
+                                View All
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-stripped table-hover">
+                            <thead class="thead-light">
+                            <tr>
+                                <th>Role</th>
+                                <th>Email</th>
+                                <th>Date Joined</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for user in last_users %}
+                                <tr>
+                                    <td>
+
+                                        {% if user.role == 'AD' %}
+                                            <span class="badge bg-success-light">Admin</span>
+                                        {% else %}
+                                            <span class="badge bg-danger-light">User</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ user.email }}</td>
+                                    <td><span class="badge bg-success-light">{{ user.date_joined|date:'Y-m-d' }}</span>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,155 @@
+{% extends 'dashboard/includes/base.html' %}
+{% load static %}
+
+{% block style %}
+    <style>
+        .description-cell {
+            max-width: 300px; /* Adjust width as necessary */
+            white-space: nowrap; /* Prevent text from wrapping */
+            overflow: hidden; /* Hide overflow text */
+            text-overflow: ellipsis; /* Show ellipsis for overflow */
+        }
+
+    </style>
+    <!-- Datatables CSS -->
+    <link rel="stylesheet" href="{% static 'dashboard/plugins/datatables/datatables.min.css' %}">
+{% endblock %}
+
+{% block content %}
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="content-page-header">
+            <h5>Messages</h5>
+        </div>
+    </div>
+    <!-- /Page Header -->
+
+    <!-- /Search Filter -->
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card-table">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="datatable table table-stripped">
+                            <thead class="thead-light">
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone Number</th>
+                                <th>Message</th>
+                                <th>Sent Date</th>
+                                <th class="no-sort">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for message in contact_messages %}
+                                <tr {% if not message.seen %}class="table-success"{% endif %}>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ message.full_name }}</td>
+                                    <td>
+                                        {{ message.email }}
+                                    </td>
+                                    <td>{{ message.phone_number }} </td>
+                                    <td class="description-cell">{{ message.message }} </td>
+                                    <td>{{ message.created_at|date:'Y-m-d' }} </td>
+                                    <td class="d-flex align-items-center">
+                                        <div class="dropdown dropdown-action">
+                                            <a href="#" class=" btn-action-icon " data-bs-toggle="dropdown"
+                                               aria-expanded="false"><i class="fas fa-ellipsis-v"></i></a>
+                                            {% if not message.seen %}
+                                                <div class="dropdown-menu dropdown-menu-end">
+                                                    <ul>
+                                                    <li>
+                                                        <a class="dropdown-item seen-button" href="javascript:void(0);"
+                                                           data-bs-toggle="modal"
+                                                           data-bs-target="#update-to-viewed"
+                                                           data-message-id="{{ message.id }}"
+                                                           data-full-name="{{ message.full_name }}"
+                                                           data-email="{{ message.email }}"
+                                                           data-phone-number="{{ message.phone_number }}"
+                                                           data-message="{{ message.message }}">
+                                                            <i class="far fa-eye me -2"></i>Seen
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Update Message Modal -->
+    <div id="update-to-viewed" class="modal fade" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Message Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Name:</strong> <span id="message-name"></span></p>
+                    <p><strong>Email:</strong> <span id="message-email"></span></p>
+                    <p><strong>Phone Number:</strong> <span id="message-phone"></span></p>
+                    <p><strong>Message:</strong></p>
+                    <p id="message-content"></p>
+                </div>
+                <div class="modal-footer">
+                    <form id="mark-seen-form" method="POST" action="">
+                        {% csrf_token %}
+                        <input type="hidden" name="message_id" id="message-id">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-info">Mark as Seen</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}
+
+{% block script %}
+    <script src="{% static 'dashboard/plugins/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'dashboard/plugins/datatables/datatables.min.js' %}"></script>
+
+    <script>
+
+        function showMessageDetails(message) {
+            document.getElementById('message-name').textContent = message.full_name;
+            document.getElementById('message-email').textContent = message.email;
+            document.getElementById('message-phone').textContent = message.phone_number;
+            document.getElementById('message-content').textContent = message.message;
+            document.getElementById('message-id').value = message.id; // Set the message ID
+            document.getElementById('mark-seen-form').action = `/mark-message-as-seen/${message.id}/`; // Set the form action
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const seenButtons = document.querySelectorAll('.seen-button');
+
+            seenButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const messageId = this.getAttribute('data-message-id');
+                    const message = {
+                        id: messageId,
+                        full_name: this.getAttribute('data-full-name'),
+                        email: this.getAttribute('data-email'),
+                        phone_number: this.getAttribute('data-phone-number'),
+                        message: this.getAttribute('data-message'),
+                    };
+                    showMessageDetails(message);
+                });
+            });
+
+        });
+    </script>
+{% endblock %}

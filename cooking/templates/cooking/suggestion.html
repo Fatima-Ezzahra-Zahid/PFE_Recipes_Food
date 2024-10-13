@@ -1,0 +1,95 @@
+{% extends 'cooking/includes/base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="bg-fixed space">
+        <div class="container">
+            <div class="title-area text-center">
+                <div class="title-ani">
+                    <span class="sub-title me-auto ms-auto">Suggestion</span>
+                </div>
+                <h2 class="sec-title title-ani text-black">Find Your Recipe</h2>
+                <p class="sec-text text-ani">Type your food needs and we'll suggest the best recipes for you!</p>
+            </div>
+            <form method="POST" class="reservation-form1">
+                {% csrf_token %}
+                <div class="form-group mb-3">
+                    <textarea class="form-control" name="user_input" id="user_input"
+                              placeholder="Type your food needs here">{{ user_input }}</textarea>
+                    <i class="fal fa-utensils"></i>
+                </div>
+                <button class="th-btn style3" type="submit">Get Suggestions</button>
+            </form>
+
+            <!-- Display error message if no dishes are found -->
+            {% if error_message %}
+                <div class="alert alert-warning mt-4">
+                    {{ error_message }}
+                </div>
+            {% endif %}
+
+            <!-- Display dishes from the local database -->
+            {% if dishes %}
+                <div class="container mt-5">
+                    <h3>Recipes from our database</h3>
+                    <div class="row gy-40">
+                        {% for dish in dishes %}
+                            <div class="col-xl-3 col-lg-4 col-sm-6">
+                                <div class="th-product product-grid">
+                                    {% if dish.image %}
+                                        <div class="product-img transparent-img">
+                                            <img style="height: 230px" src="{{ dish.image.url }}" alt="Product Image">
+                                        </div>
+                                    {% else %}
+                                        <div class="product-img transparent-img">
+                                            <img src="{% static 'img/product/product_1_1.png' %}" alt="Product Image">
+                                        </div>
+                                    {% endif %}
+                                    <div class="product-content">
+                                        <h3 class="product-title">
+                                            <a href="{% url 'recipes-details' dish.pk %}">{{ dish.name }}</a>
+                                        </h3>
+                                        <span>Cooking Time: {{ dish.cooking_time }} minutes</span>
+                                        <!-- Display categories -->
+                                        <div class="categories">
+                                            {% for category in dish.dishcategory_set.all %}
+                                                <span class="category">{{ category.category.name }}</span>
+                                                {% if not forloop.last %}, {% endif %}
+                                            {% empty %}
+                                                <span>No category</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+
+            <!-- Display recipes from the Spoonacular API -->
+            {% if api_recipes %}
+                <div class="container mt-5">
+                    <h3>Recipes from Spoonacular API</h3>
+                    <div class="row gy-40">
+                        {% for recipe in api_recipes %}
+                            <div class="col-xl-3 col-lg-4 col-sm-6">
+                                <div class="th-product product-grid">
+                                    <div class="product-img transparent-img">
+                                        <img style="height: 230px" src="{{ recipe.image }}" alt="Recipe Image">
+                                    </div>
+                                    <div class="product-content">
+                                        <h3 class="product-title">
+                                            <a href="https://spoonacular.com/recipes/{{ recipe.id }}">{{ recipe.title }}</a>
+                                        </h3>
+                                        <span>Cooking Time: {{ recipe.readyInMinutes }} minutes</span>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

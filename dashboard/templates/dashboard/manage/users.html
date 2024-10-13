@@ -1,0 +1,351 @@
+{% extends 'dashboard/includes/base.html' %}
+{% load static %}
+
+{% block style %}
+    <!-- Datatables CSS -->
+    <link rel="stylesheet" href="{% static 'dashboard/plugins/datatables/datatables.min.css' %}">
+{% endblock %}
+
+{% block content %}
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="content-page-header">
+            <h5>Users</h5>
+            <div class="list-btn">
+                <ul class="filter-list">
+                    <li>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas"
+                                data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"><i
+                                class="fa fa-plus-circle me-2"
+                                aria-hidden="true"></i>Add New User
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /Page Header -->
+
+    <!-- Search Filter -->
+    <div id="filter_inputs" class="card filter-card">
+        <div class="card-body pb-0">
+            <div class="row">
+                <div class="col-sm-6 col-md-3">
+                    <div class="input-block mb-3">
+                        <label>Name</label>
+                        <input type="text" class="form-control">
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    <div class="input-block mb-3">
+                        <label>Email</label>
+                        <input type="text" class="form-control">
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    <div class="input-block mb-3">
+                        <label>Phone</label>
+                        <input type="text" class="form-control">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Search Filter -->
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card-table">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="datatable table table-stripped">
+                            <thead class="thead-light">
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Username</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Joined Date</th>
+                                <th class="no-sort">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for user in users %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>
+                                        <h2 class="table-avatar">
+                                            {% if user.image %}
+                                                <a href="profile.html" class="avatar avatar-md me-2"><img
+                                                        class="avatar-img rounded-circle"
+                                                        src="{{ user.image.url }}"
+                                                        alt="User Image"></a>
+                                            {% else %}
+                                                <a href="profile.html" class="avatar avatar-md me-2"><img
+                                                        class="avatar-img rounded-circle"
+                                                        src="{% static 'dashboard/img/profiles/avatar-14.jpg' %}"
+                                                        alt="User Image"></a>
+                                            {% endif %}
+                                            <a href="profile.html">{{ user.get_full_name }}</a>
+                                        </h2>
+                                    </td>
+                                    <td>{{ user.email }}</td>
+                                    <td>{{ user.username }}</td>
+                                    <td>{% if user.role == 'AD' %}
+                                        Admin{% else %}User{% endif %}</td>
+                                    <td>{% if user.is_active %}
+                                        <span class="badge bg-success-light">Active</span>{% else %}
+                                        <span class="badge bg-danger-light">Not Active</span>{% endif %}</td>
+                                    <td>{{ user.date_joined|date:'Y-m-d H:i' }}</td>
+                                    <td class="d-flex align-items-center">
+                                        <div class="dropdown dropdown-action">
+                                            <a href="#" class=" btn-action-icon " data-bs-toggle="dropdown"
+                                               aria-expanded="false"><i class="fas fa-ellipsis-v"></i></a>
+                                            <div class="dropdown-menu dropdown-menu-end">
+                                                <ul>
+                                                    <li>
+                                                        <a class="dropdown-item" href="javascript:void(0);"
+                                                           data-bs-toggle="modal" data-bs-target="#updateUserModal"
+                                                           onclick="populateUpdateForm('{{ user.id }}', '{{ user.first_name }}', '{{ user.last_name }}', '{{ user.email }}', '{{ user.username }}', '{{ user.role }}')">
+                                                            <i class="far fa-eye me-2"></i>Update
+                                                        </a>
+                                                    </li>
+
+                                                    <li>
+                                                        <a class="dropdown-item" href="javascript:void(0);"
+                                                           data-bs-toggle="modal"
+                                                           data-bs-target="#danger-alert-modal"
+                                                           data-user-id="{{ user.id }}">
+                                                            <i class="far fa-trash-alt me-2"></i>Delete
+                                                        </a>
+                                                    </li>
+                                                    <!-- Activate or Deactivate user -->
+                                                    {% if user.is_active %}
+                                                        <li>
+                                                            <a class="dropdown-item" href="javascript:void(0);"
+                                                               data-bs-toggle="modal" data-bs-target="#activation-modal"
+                                                               data-user-id="{{ user.id }}" data-action="deactivate">
+                                                                <i class="far fa-bell-slash me-2"></i>Deactivate
+                                                            </a>
+                                                        </li>
+                                                    {% else %}
+                                                        <li>
+                                                            <a class="dropdown-item" href="javascript:void(0);"
+                                                               data-bs-toggle="modal" data-bs-target="#activation-modal"
+                                                               data-user-id="{{ user.id }}" data-action="activate">
+                                                                <i class="fa-solid fa-power-off me-2"></i>Activate
+                                                            </a>
+                                                        </li>
+                                                    {% endif %}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Danger Alert Modal to delete user -->
+    <div id="danger-alert-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content modal-filled bg-danger">
+                <div class="modal-body p-4">
+                    <div class="text-center">
+                        <i class="dripicons-wrong h1 text-white"></i>
+                        <h4 class="mt-2 text-white">Oh snap!</h4>
+                        <p class="mt-3 text-white">Are you sure you want to delete this user?</p>
+                        <form method="post" action="{% url 'delete_user' %}">
+                            {% csrf_token %}
+                            <input type="hidden" id="user-id" name="user_id">
+                            <button type="button" class="btn btn-light my-2" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-danger my-2">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <!-- Activation/Deactivation Modal -->
+    <div id="activation-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content modal-filled bg-warning">
+                <div class="modal-body p-4 text-center">
+                    <i class="dripicons-power h1 text-white"></i>
+                    <h4 class="mt-2 text-white">Confirmation</h4>
+                    <p class="mt-3 text-white">Are you sure you want to <span id="action-name"></span> this user?</p>
+                    <a href="#" id="confirm-action" class="btn btn-light my-2">Confirm</a>
+                    <button type="button" class="btn btn-light my-2" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Update User Modal -->
+    <div class="modal fade" id="updateUserModal" tabindex="-1" aria-labelledby="updateUserModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="updateUserForm" method="post" action="{% url 'update_user' %}">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="updateUserModalLabel">Update User</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="userId" name="user_id" value="">
+                        <div class="input-block mb-3">
+                            <label for="first_name">First Name</label>
+                            <input type="text" id="first_name" name="first_name" class="form-control" >
+                        </div>
+                        <div class="input-block mb-3">
+                            <label for="last_name">Last Name</label>
+                            <input type="text" id="last_name" name="last_name" class="form-control" >
+                        </div>
+                        <div class="input-block mb-3">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" class="form-control" >
+                        </div>
+                        <div class="input-block mb-3">
+                            <label for="username">Username</label>
+                            <input type="text" id="username" name="username" class="form-control">
+                        </div>
+                        <div class="input-block mb-3">
+                            <label for="role">Role</label>
+                            <select id="role" name="role" class="form-select" required>
+                                <option value="AD">Admin</option>
+                                <option value="CU">User</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Update User</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+        <div class="offcanvas-header">
+            <h5 id="offcanvasRightLabel">Add New User</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div> <!-- end offcanvas-header-->
+
+        <div class="offcanvas-body">
+            <div class="row">
+                <form action="{% url 'add_user' %}" method="post">
+                    {% csrf_token %}
+                    <div class="input-block mb-3">
+                        <label>First Name</label>
+                        <input type="text" class="form-control" name="first_name" >
+                    </div>
+                    <div class="input-block mb-3">
+                        <label>Last Name</label>
+                        <input type="text" class="form-control" name="last_name" >
+                    </div>
+                    <div class="input-block mb-3">
+                        <label>Email Address</label>
+                        <input type="email" class="form-control" name="email" required>
+                    </div>
+                    <div class="input-block mb-3">
+                        <label>Username</label>
+                        <input type="text" class="form-control" name="username">
+                    </div>
+                    <div class="input-block mb-3">
+                        <label>Password</label>
+                        <input type="password" class="form-control" name="password" required>
+                    </div>
+                    <div class="input-block mb-3">
+                        <label>Repeat Password</label>
+                        <input type="password" class="form-control" name="password_repeat" required>
+                    </div>
+                    <div class="input-block mb-3">
+                        <label class="d-block">Role:</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="role" id="role_admin" value="AD"
+                                   required>
+                            <label class="form-check-label" for="role_admin">Admin</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="role" id="role_user" value="CU" required>
+                            <label class="form-check-label" for="role_user">User</label>
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div> <!-- end offcanvas-body-->
+    </div> <!-- end offcanvas-->
+
+{% endblock content %}
+
+{% block script %}
+    <script>
+        // When the modal is triggered, set the user ID in the hidden input field
+        let dangerModal = document.getElementById('danger-alert-modal');
+        dangerModal.addEventListener('show.bs.modal', function (event) {
+            let button = event.relatedTarget; // Button that triggered the modal
+            let userId = button.getAttribute('data-user-id'); // Extract info from data-* attributes
+
+            // Update the modal's hidden input field
+            let input = dangerModal.querySelector('#user-id');
+            input.value = userId;
+        });
+    </script>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            let modal = document.getElementById('activation-modal');
+            let confirmActionButton = modal.querySelector('#confirm-action');
+            let actionNameSpan = modal.querySelector('#action-name');
+
+            modal.addEventListener('show.bs.modal', function (event) {
+                // Get data attributes from the triggering element
+                let button = event.relatedTarget;
+                let userId = button.getAttribute('data-user-id');
+                let action = button.getAttribute('data-action');
+
+                // Set the text and the href for the confirm button
+                let actionText = action === 'activate' ? 'activate' : 'deactivate';
+                actionNameSpan.textContent = actionText;
+
+                // Set the confirmation link dynamically
+                confirmActionButton.setAttribute('href', `/${action}-user/${userId}/`);
+            });
+        });
+    </script>
+
+    {# update user    #}
+    <script>
+        function populateUpdateForm(id, firstName, lastName, email, username, role) {
+            document.getElementById('userId').value = id;
+            document.getElementById('first_name').value = firstName;
+            document.getElementById('last_name').value = lastName;
+            document.getElementById('email').value = email;
+            document.getElementById('username').value = username;
+            document.getElementById('role').value = role;
+        }
+    </script>
+
+
+
+    <!-- Datatables JS -->
+    <script src="{% static 'dashboard/plugins/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'dashboard/plugins/datatables/datatables.min.js' %}"></script>
+{% endblock %}

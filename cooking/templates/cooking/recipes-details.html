@@ -1,0 +1,268 @@
+{% extends 'cooking/includes/base.html' %}
+{% load static %}
+{% block content %}
+    <div class="breadcumb-wrapper " data-bg-src="{% static 'img/bg_imgs/breadcumb-bg.jpg' %}">
+        <div class="container">
+            <div class="breadcumb-content">
+                <h1 class="breadcumb-title">Recipes Details</h1>
+                <ul class="breadcumb-menu">
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li>Recipes Details</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <section class="product-details space-top space-extra-bottom">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="product-big-img transparent-img">
+                        <div class="img"><img src="{% static 'img/product/product_1_5.png' %}"
+                                              alt="Product Image"></div>
+                    </div>
+                </div>
+                <div class="col-lg-6 align-self-center">
+                    <div class="product-about">
+                        <h2 class="product-title">{{ dish.name }}</h2>
+                        <div class="product-rating">
+                            <div class="star-rating" role="img" aria-label="Rated 5.00 out of 5"><span
+                                    style="width:100%">Rated <strong
+                                    class="rating">5.00</strong> out of 5 based on <span class="rating">1</span> customer rating</span>
+                            </div>
+                            <a href="recipes-details.html" class="woocommerce-review-link">(<span class="count">4</span>
+                                customer reviews)</a>
+                        </div>
+                        <p class="text">{{ dish.description }}</p>
+                        <div class="mt-2 link-inherit">
+                            <strong class="text-title me-3">Cuisine Type:</strong>
+                            <span class="stock in-stock"><i
+                                    class="far fa-check-square me-2 ms-1"></i>{{ dish.cuisine_type }}</span>
+                        </div>
+                        <div class="product_meta mt-2">
+                            <span class="sku_wrapper">Categories:
+                                <span class="sku">
+                                {% for category in categories %}
+                                    {{ category.category.name }}
+                                    {% if not forloop.last %}
+                                        |
+                                    {% endif %}
+                                {% endfor %}
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-between align-items-center">
+                <div class="col-md-auto mb-0">
+                    <h2 class="sec-title title-ani text-center">Steps</h2>
+                </div>
+                <div class="col-md d-none d-sm-block">
+                    <hr class="title-line">
+                </div>
+                <blockquote>
+                    {% for step in recipe_steps %}
+                        <p><b>Step {{ step.step_number }} : </b> {{ step.instruction }}</p>
+                    {% endfor %}
+
+                </blockquote>
+            </div>
+
+            <div class="woocommerce-Reviews">
+                <div class="th-comments-wrap ">
+                    <ul class="comment-list">
+                        <li class="review th-comment-item">
+                            <div class="th-post-comment">
+                                <div class="comment-avater">
+                                    <img src="{% static 'img/blog/comment-author-1.jpg' %}"
+                                         alt="Comment Author">
+                                </div>
+                                <div class="comment-content">
+                                    <h4 class="name">Adam Jhon</h4>
+                                    <span class="commented-on"><i
+                                            class="fal fa-calendar"></i>22 January, 2024</span>
+                                    <div class="star-rating" role="img" aria-label="Rated 5.00 out of 5">
+                                                <span style="width:100%">Rated <strong class="rating">5.00</strong> out of 5 based on <span
+                                                        class="rating">1</span> customer rating</span>
+                                    </div>
+                                    <p class="text">This product is very much qualityful and I love this working
+                                        system and speed.</p>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="review th-comment-item">
+                            <div class="th-post-comment">
+                                <div class="comment-avater">
+                                    <img src="{% static 'img/blog/comment-author-2.jpg' %}"
+                                         alt="Comment Author">
+                                </div>
+                                <div class="comment-content">
+                                    <h4 class="name">Jusctin Dacon</h4>
+                                    <span class="commented-on"><i
+                                            class="fal fa-calendar"></i>26 January, 2024</span>
+                                    <div class="star-rating" role="img" aria-label="Rated 5.00 out of 5">
+                                                <span style="width:100%">Rated <strong class="rating">5.00</strong> out of 5 based on <span
+                                                        class="rating">1</span> customer rating</span>
+                                    </div>
+                                    <p class="text">They delivered the product in a few time. Product quality is
+                                        also very good.</p>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="review th-comment-item">
+                            <div class="th-post-comment">
+                                <div class="comment-avater">
+                                    <img src="{% static 'img/blog/comment-author-3.jpg' %}"
+                                         alt="Comment Author">
+                                </div>
+                                <div class="comment-content">
+                                    <h4 class="name">Jacklin July</h4>
+                                    <span class="commented-on"><i
+                                            class="fal fa-calendar"></i>26 January, 2024</span>
+                                    <div class="star-rating" role="img" aria-label="Rated 5.00 out of 5">
+                                                <span style="width:100%">Rated <strong class="rating">5.00</strong> out of 5 based on <span
+                                                        class="rating">1</span> customer rating</span>
+                                    </div>
+                                    <p class="text">Their product and service is very satisfying. I highly
+                                        recommend their services.</p>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="review th-comment-item">
+                            <div class="th-post-comment">
+                                <div class="comment-avater">
+                                    <img src="{% static 'img/blog/comment-author-4.jpg' %}"
+                                         alt="Comment Author">
+                                </div>
+                                <div class="comment-content">
+                                    <h4 class="name">Adison Smith</h4>
+                                    <span class="commented-on"><i
+                                            class="fal fa-calendar"></i>26 January, 2024</span>
+                                    <div class="star-rating" role="img" aria-label="Rated 5.00 out of 5">
+                                                <span style="width:100%">Rated <strong class="rating">5.00</strong> out of 5 based on <span
+                                                        class="rating">1</span> customer rating</span>
+                                    </div>
+                                    <p class="text">I am just in love with this product. Their service is also
+                                        very good you can also try.</p>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div> <!-- Comment Form -->
+                <div class="th-comment-form ">
+                    <div class="form-title">
+                        <h3 class="blog-inner-title ">Add a review</h3>
+                    </div>
+                    <div class="row">
+                        <div class="form-group rating-select d-flex align-items-center">
+                            <label>Your Rating</label>
+                            <p class="stars">
+                                                <span>
+                                                    <a class="star-1" href="#">1</a>
+                                                    <a class="star-2" href="#">2</a>
+                                                    <a class="star-3" href="#">3</a>
+                                                    <a class="star-4" href="#">4</a>
+                                                    <a class="star-5" href="#">5</a>
+                                                </span>
+                            </p>
+                        </div>
+                        <div class="col-12 form-group">
+                            <textarea placeholder="Write a Message" class="form-control"></textarea>
+                            <i class="text-title far fa-pencil-alt"></i>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <input type="text" placeholder="Your Name" class="form-control">
+                            <i class="text-title far fa-user"></i>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <input type="text" placeholder="Your Email" class="form-control">
+                            <i class="text-title far fa-envelope"></i>
+                        </div>
+                        <div class="col-12 form-group">
+                            <input id="reviewcheck" name="reviewcheck" type="checkbox">
+                            <label for="reviewcheck">Save my name, email, and website in this browser for the
+                                next time I comment.<span class="checkmark"></span></label>
+                        </div>
+                        <div class="col-12 form-group mb-0">
+                            <button class="th-btn">Post Review</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--==============================
+Related Product
+==============================-->
+            <div class="space-extra-top mb-30">
+                <div class="row justify-content-between align-items-center">
+                    {% if related_dishes|length > 4 %}
+                        <div class="col-md-auto d-none d-md-block">
+                            <div class="sec-btn">
+                                <div class="icon-box">
+                                    <button data-slider-prev="#productSlider1" class="slider-arrow slider-prev default">
+                                        <span class="icon"></span>
+                                    </button>
+                                    <button data-slider-next="#productSlider1" class="slider-arrow slider-next default">
+                                        <span class="icon"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="swiper th-slider has-shadow" id="productSlider1"
+                     data-slider-options='{"breakpoints":{"0":{"slidesPerView":1},"576":{"slidesPerView":"2"},"768":{"slidesPerView":"2"},"992":{"slidesPerView":"3"},"1200":{"slidesPerView":"4"}}}'>
+                    <div class="swiper-wrapper">
+                        {% for dish in related_dishes %}
+                            <div class="swiper-slide">
+                                <div class="th-product product-grid">
+                                    <div class="product-img transparent-img">
+                                        <img src="{% static 'img/product/product_1_1.png' %}" alt="Product Image">
+                                        <span class="product-tag">-25%</span>
+                                        <div class="actions">
+                                            <a href="#QuickView" class="icon-btn popup-content"><i
+                                                    class="far fa-eye"></i></a>
+                                            <a href="cart.html" class="icon-btn"><i class="far fa-cart-plus"></i></a>
+                                            <a href="wishlist.html" class="icon-btn"><i class="far fa-heart"></i></a>
+                                        </div>
+                                    </div>
+                                    <div class="product-content">
+                                        <h3 class="product-title">
+                                            <a href="{% url 'recipes-details' dish.pk %}">{{ dish.name }}</a>
+                                        </h3>
+                                        <span>Cooking Time: {{ dish.cooking_time }} minutes</span>
+                                        <!-- Display categories -->
+                                        <div class="categories">
+                                            {% for category in dish.dishcategory_set.all %}
+                                                <span class="category">{{ category.category.name }}</span>
+                                                {% if not forloop.last %}, {% endif %}
+                                            {% empty %}
+                                                <span>No category</span>
+                                            {% endfor %}
+                                        </div>
+                                        {% if dish.num_steps == 0 %}
+                                            <span class="price">No steps available</span>  <!-- No steps available -->
+                                        {% elif dish.num_steps == 1 %}
+                                            <span class="price">1 Step</span>  <!-- Single step -->
+                                        {% else %}
+                                            <span class="price">{{ dish.num_steps }} Steps</span>
+                                            <!-- Multiple steps -->
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="d-block d-md-none mt-40 text-center">
+                    <div class="icon-box">
+                        <button data-slider-prev="#productSlider1" class="slider-arrow slider-prev default"><span
+                                class="icon"></span></button>
+                        <button data-slider-next="#productSlider1" class="slider-arrow slider-next default"><span
+                                class="icon"></span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

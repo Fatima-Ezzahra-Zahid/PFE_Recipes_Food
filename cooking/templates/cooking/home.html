@@ -1,0 +1,237 @@
+{% extends 'cooking/includes/base.html' %}
+{% load static %}
+{% load custom_filters %}
+
+
+{% block title %} Delicious Food Recipes {% endblock %}
+{% block content %}
+
+    <!--============================== Hero Area ==============================-->
+    <div class="th-hero-wrapper hero-2" id="hero">
+        <div class="hero-shape1">
+            <img src="{% static 'img/hero/hero_shape_2_1.png' %}" alt="shape">
+        </div>
+        <div class="hero-shape2">
+            <img src="{% static 'img/hero/hero_shape_2_2.png' %}" alt="shape">
+        </div>
+        <div class="hero-shape3">
+            <img src="{% static 'img/hero/hero_shape_2_3.png' %}" alt="shape">
+        </div>
+        <div class="hero-inner">
+            <div class="container th-container">
+                <div class="hero-style2">
+                    <div class="title-ani">
+                        <span class="hero-subtitle text-center">Quick, Easy, and Fun Recipes!</span>
+                    </div>
+                    <h1 class="hero-title2">Fast Fresh</h1>
+                    <h2 class="hero-title3">Flavorful</h2>
+                    <div class="title-ani2">
+                        <a href="recipes.html" class="th-btn style3">Recipes</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="hero-img">
+            <img src="{% static 'img/bg_imgs/hero.png' %}" alt="Hero Image">
+        </div>
+    </div>
+    <!--======== / Hero Section ========-->
+    <!--==============================
+Menu Area
+==============================-->
+    <section class="space">
+        <div class="container">
+            <div class="title-area text-center">
+                <h2 class="sec-title">Our Tasty Recipes</h2>
+            </div>
+
+            <!-- Navigation Buttons for Cuisine Categories -->
+            <div class="text-ani">
+                <div class="nav tab-menu1" role="tablist">
+                    <!-- Button for All Foods -->
+                    <button class="th-btn style-border btn-sm active" id="nav-all-tab" data-bs-toggle="tab"
+                            data-bs-target="#nav-all" type="button" role="tab" aria-controls="nav-all"
+                            aria-selected="true">All Foods
+                    </button>
+
+                    <!-- Buttons for each Cuisine Category -->
+                    {% for cuisine in top_cuisines %}
+                        <button class="th-btn style-border btn-sm"
+                                id="nav-{{ cuisine.id }}-tab"
+                                data-bs-toggle="tab"
+                                data-bs-target="#nav-{{ cuisine.id }}"
+                                type="button"
+                                role="tab"
+                                aria-controls="nav-{{ cuisine.id }}"
+                                aria-selected="false">
+                            {{ cuisine.name }}
+                        </button>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Tab Content -->
+            <div class="tab-content">
+                <!-- Tab Pane for All Foods (12 dishes) -->
+                <div class="tab-pane fade show active" id="nav-all" role="tabpanel" aria-labelledby="nav-all-tab">
+                    <div class="slider-area">
+                        <div class="swiper th-slider blogSlider1"
+                             data-slider-options='{"breakpoints":{"0":{"slidesPerView":1},"576":{"slidesPerView":"2"},"768":{"slidesPerView":"2"},"992":{"slidesPerView":"3"},"1200":{"slidesPerView":"4"}}}'>
+                            <div class="swiper-wrapper">
+                                {% for dish in all_dishes %}
+                                    <div class="swiper-slide">
+                                        <div class="menu-card">
+                                            <div class="box-shape"></div>
+                                            <h3 class="box-title"><a href="{% url 'recipes-details' dish.pk %}">{{ dish.name }}</a>
+                                            </h3>
+                                            {% if dish.image %}
+                                                <div class="box-img">
+                                                    <img src="{{ dish.image.url }}" alt="{{ dish.name }}">
+                                                </div>
+                                            {% else %}
+                                                <div class="box-img">
+                                                    <img src="{% static 'img/product/menu_card_1.jpg' %}" alt="Food">
+                                                </div>
+                                            {% endif %}
+                                            <p class="box-text">{{ dish.description|truncatewords:10 }}</p>
+                                            <!-- Replace with actual price if applicable -->
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <button data-slider-prev=".blogSlider1" class="slider-arrow slider-prev"><span
+                                class="icon"></span></button>
+                        <button data-slider-next=".blogSlider1" class="slider-arrow slider-next"><span
+                                class="icon"></span></button>
+                    </div>
+                </div>
+
+                <!-- Tab Panes for each Cuisine Category (last 4 dishes) -->
+                {% for cuisine in top_cuisines %}
+                    <div class="tab-pane fade" id="nav-{{ cuisine.id }}" role="tabpanel"
+                         aria-labelledby="nav-{{ cuisine.id }}-tab">
+                        <div class="slider-area">
+                            <div class="swiper th-slider blogSlider1"
+                                 data-slider-options='{"breakpoints":{"0":{"slidesPerView":1},"576":{"slidesPerView":"2"},"768":{"slidesPerView":"2"},"992":{"slidesPerView":"3"},"1200":{"slidesPerView":"4"}}}'>
+                                <div class="swiper-wrapper">
+                                    {% for dish in dishes_by_category|get:cuisine.id %}
+                                        <div class="swiper-slide">
+                                            <div class="menu-card">
+                                                <div class="box-shape"></div>
+                                                <h3 class="box-title"><a href="recipes-details.html">{{ dish.name }}</a>
+                                                </h3>
+                                                {% if dish.image %}
+                                                    <div class="box-img">
+                                                        <img src="{{ dish.image.url }}" alt="{{ dish.name }}">
+                                                    </div>
+                                                {% else %}
+                                                    <div class="box-img">
+                                                        <img src="{% static 'img/product/menu_card_1.jpg' %}"
+                                                             alt="Food">
+                                                    </div>
+                                                {% endif %}
+                                                <p class="box-text">{{ dish.description|truncatewords:10 }}</p>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+
+            </div>
+
+            <div class="mt-5 pt-xl-2 text-center">
+                <div class="text-ani">
+                    <a href="recipes.html" class="th-btn style-border">View All Recipes</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <!--==============================
+About Area
+==============================-->
+    <div class="overflow-hidden bg-smoke" id="about-sec">
+        <div class="shape-mockup moving" data-top="10%" data-right="4%"><img
+                src="{% static 'img/shape/garlic_3.png' %}" alt="shape"></div>
+        <div class="shape-mockup spin d-none d-lg-block" data-bottom="5%" data-right="3%"><img
+                src="{% static 'img/shape/flower_5.png' %}" alt="shape"></div>
+        <div class="container">
+            <div class="row gx-0">
+                <div class="col-xl-6">
+                    <div class="img-box4">
+                        <img src="{% static 'img/bg_imgs/about_2_1.jpg' %}" data-speed="auto" alt="Image">
+                    </div>
+                </div>
+                <div class="col-xl-6 text-center text-xl-start space align-self-center">
+                    <div class="about-space1">
+                        <div class="title-area pe-xl-4 mb-35">
+                            <h2 class="sec-title">Grilled Halloumi with Roasted Vegetables and Citrus Vinaigrette</h2>
+                            <div class="text-ani">
+                                <p class="sec-text">This beautifully crafted dish highlights the perfect combination of
+                                    smoky grilled halloumi (or tofu for a vegan option) and a medley of roasted
+                                    vegetables, topped with a fresh, citrus-infused vinaigrette.r.</p>
+                                <p class="sec-text">Ideal as an appetizer or a light main course, this recipe brings
+                                    together bold flavors, delicate textures, and a hint of zesty brightness.</p>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--==============================
+About Area
+==============================-->
+    <div class="overflow-hidden " id="about-sec2">
+        <div class="shape-mockup moving" data-bottom="10%" data-left="40%"><img
+                src="{% static 'img/shape/garlic_4.png' %}" alt="shape" data-speed="1.12"></div>
+        <div class="container">
+            <div class="row gx-0 flex-row-reverse">
+                <div class="col-xl-6 mb-40 mb-xl-0">
+                    <div class="img-box5">
+                        <div class="shape1">
+                            <img src="{% static 'img/shape/leaf-3.png' %}" alt="shape">
+                        </div>
+                        <div class="shape2">
+                            <img src="{% static 'img/shape/leaf-4.png' %}" alt="shape">
+                        </div>
+                        <div class="img1">
+                            <img src="{% static 'img/bg_imgs/about_3_1.jpg' %}" alt="Why" data-speed="0.9">
+                        </div>
+                        <div class="img2">
+                            <img src="{% static 'img/bg_imgs/about_3_2.jpg' %}" alt="Why" data-speed="1.1">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-6 text-center text-xl-start align-self-center">
+                    <div class="pe-xxl-5 me-xl-5">
+                        <div class="title-area pe-xl-4 mb-35">
+                            <h2 class="sec-title">
+                                Gourmet Delights: Beetroot Salad and Seared Steak</h2>
+                            <div class="text-ani">
+                                <p class="sec-text pe-xl-5">In the first image, we have a beautifully plated Beetroot
+                                    Salad with Hummus, featuring roasted beetroot cubes resting on a smooth hummus base,
+                                    topped with fresh greens and microgreens. The dish is garnished with toasted pine
+                                    nuts and a drizzle of balsamic glaze, offering a balanced blend of earthy, nutty,
+                                    and creamy flavors. In the second image, a perfectly Seared Steak is served with
+                                    sautéed haricots verts and carrot ribbons, complemented by a rich demi-glace sauce.
+                                    The dish is elegantly garnished with herbs, making it an ideal choice for a refined
+                                    and flavorful main course..</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
